@@ -23,11 +23,7 @@ function App() {
   const[timerSet, setTimerset] = useState(false)
   const[timerSet1, setTimerset1] = useState(false)
   const[roboAppear,setRoboappear] = useState(false)
-  const [messages, setMessages] = useState([
-    {
-      robo:true
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
   const[textData,setTextData] = useState("")
   const[triggerTextBox, setTriggerTextBox] = useState(false)
   const[switchText, setSwitchText] = useState()
@@ -37,31 +33,28 @@ function App() {
   const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
   const userPic = <div className='text-white mt-2 ml-10'>You:</div>
 
-  const addMessage = (roboText,arrayNum) => {
+  const addMessage = (roboText) => {
     setMessages(
       [...messages, 
         { 
           id: messages.length, 
           text: roboText,
-          robo:true
+      
         }]);
-        //setSwitchText[arrayNum](true)
+        setSwitchText(true)
   };
 
-   useEffect(()=>{
-   console.log(messages);
-    
-  },[messages])
+  
 
-  const userMessage = (num)=>{
+  const userMessage = ()=>{
     setMessages(
       [...messages, 
         { 
           id: messages.length, 
           text: textData,
-          robo:false
+         
         }]);
-        //setSwitchText[1](false)
+       setSwitchText(false)
   }
 
   useEffect(() => {
