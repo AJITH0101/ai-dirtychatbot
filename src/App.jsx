@@ -5,18 +5,8 @@ import Typewriter from "typewriter-effect";
 import { motion } from "framer-motion";
 import { BiSolidSend } from "react-icons/bi";
 
-const sendIcon = <BiSolidSend color='white' size={20} />
-//curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY" 
-//API Key AIzaSyB5e-M-zkQUQblTxrqjFRHwtzYWnyGeyyw
-/*
-curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY" \
--H 'Content-Type: application/json' \
--X POST \
--d '{
-  "contents": [{
-    "parts":[{"text": "Explain how AI works"}]
-    }]
-   }'*/
+const sendIcon = <BiSolidSend color='white' size={18} />
+
 
 import './App.css'
 import { useEffect, useState,useRef } from 'react'
@@ -34,11 +24,38 @@ function App() {
   const[timerSet1, setTimerset1] = useState(false)
   const[roboAppear,setRoboappear] = useState(false)
   const [messages, setMessages] = useState([]);
+  const[textData,setTextData] = useState("")
+  const[triggerTextBox, setTriggerTextBox] = useState(false)
+  const[switchText, setSwitchText] = useState(true)
   const messagesEndRef = useRef(null);
+  const roboStyle = "w-40 h-auto bg-blue-500 text-white p-2 rounded-lg ml-2"
+  const userStyle = "w-40 h-auto bg-white text-stone-700 p-2 rounded-lg ml-2"
+  const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
+  const userPic = <div className='text-white mt-2 ml-10'>You:</div>
 
-  const addMessage = () => {
-    setMessages([...messages, { id: messages.length, text: "Hello, I am Matty!" }]);
+  const addMessage = (roboText) => {
+    setMessages(
+      [...messages, 
+        { 
+          id: messages.length, 
+          text: roboText
+        }]);
   };
+
+   useEffect(()=>{
+   console.log(messages);
+    
+  },[messages])
+
+  const userMessage = ()=>{
+    setMessages(
+      [...messages, 
+        { 
+          id: messages.length, 
+          text: textData
+        }]);
+        //setSwitchText(false)
+  }
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -69,7 +86,9 @@ function App() {
 
     const timer_3 = setTimeout(()=>{
       setRoboappear(false)  
-    },9000)
+      setTriggerTextBox(true)
+      addMessage("Hello! Ajith")
+    },4000)
     
 
     return () => {
@@ -85,7 +104,7 @@ function App() {
 
   return (
     <>
-    <div className='relative w-full h-[100vh] flex justify-center items-center'>
+    <div className='relative w-full h-[100vh]  flex justify-center items-center'>
         <div className='relative lg:w-1/4 md:1/4 w-[90%] h-96 border border-stone-500 rounded-lg flex justify-center items-center'>
    
 
@@ -120,42 +139,42 @@ function App() {
             </div>
             </div>
 
-            <div className=' top-0 left-0 w-1/2 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'>
+            <div className=' w-full h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'>
 
-            <div className="w-full h-auto relative flex flex-col items-start gap-2 p-4">
+                <div className="w-full h-80 relative flex flex-col items-start gap-2 p-4 ">
+            
                   {messages.map((msg) => (
+                    <div key={msg.id} className='flex flex-row'><div>{switchText ? roboPic : userPic}</div>
                     <motion.div
-                      key={msg.id}
+                      
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.7, ease: "easeOut" }}
-                      className="w-32 h-24 bg-blue-500 text-white p-2 rounded-lg"
+                      className={switchText ? roboStyle : userStyle}
                     >
                       {msg.text}
-                    </motion.div>
-                  ))}
+                    </motion.div></div> ))}
+                 
 
-                      <div ref={messagesEndRef} />
-
-                      <div className='fixed w-full h-full h-min-12 mt-74'>
-                        <textarea className='w-[80%] h-11 text-xl pt-2  pl-2 rounded-md bg-stone-800  resize-none overflow-y-auto text-white flex items-center'>
-
-
-                        </textarea>
-
-                      <button
-                          onClick={addMessage}
-                          className="absolute top-1 left-65 p-2 bg-green-500 text-white rounded"
-                        >
-                    {sendIcon}
-                  </button> 
+                      {/* <div ref={messagesEndRef} /> */}                   
                   </div>
-              </div>
+                  
+     
+              
+             
+               { triggerTextBox && (<div className='relative w-full h-14'>
+                <textarea 
+                    className="w-[80%] h-10 ml-2 mt-2 bg-stone-800 resize-none overflow-y-auto text-white p-2 leading-normal"
+                    placeholder="Type here..." value={textData} onChange={(e)=>setTextData(e.target.value)}
+                  ></textarea>
+                  <div className='absolute top-4 left-62' onClick={userMessage}>{sendIcon}</div>
+                   
 
+                  </div>)}
 
               
 
-            </div>
+            </div> 
 
 
 
@@ -173,4 +192,19 @@ export default App
   <div className='w-32 h-12 bg-blue-500 rounded-lg m-2'>
     <img src={roboImg} alt='robo' className='w-10 h-10 rounded-full bg-black '/>
   </div>
-</div>)} */}
+</div>)} 
+//curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY" 
+//API Key AIzaSyB5e-M-zkQUQblTxrqjFRHwtzYWnyGeyyw
+
+curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY" \
+-H 'Content-Type: application/json' \
+-X POST \
+-d '{
+  "contents": [{
+    "parts":[{"text": "Explain how AI works"}]
+    }]
+   }'
+
+
+
+*/}
