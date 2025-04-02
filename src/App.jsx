@@ -23,23 +23,29 @@ function App() {
   const[timerSet, setTimerset] = useState(false)
   const[timerSet1, setTimerset1] = useState(false)
   const[roboAppear,setRoboappear] = useState(false)
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    {
+      robo:true
+    }
+  ]);
   const[textData,setTextData] = useState("")
   const[triggerTextBox, setTriggerTextBox] = useState(false)
-  const[switchText, setSwitchText] = useState(true)
+  const[switchText, setSwitchText] = useState()
   const messagesEndRef = useRef(null);
   const roboStyle = "w-40 h-auto bg-blue-500 text-white p-2 rounded-lg ml-2"
   const userStyle = "w-40 h-auto bg-white text-stone-700 p-2 rounded-lg ml-2"
   const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
   const userPic = <div className='text-white mt-2 ml-10'>You:</div>
 
-  const addMessage = (roboText) => {
+  const addMessage = (roboText,arrayNum) => {
     setMessages(
       [...messages, 
         { 
           id: messages.length, 
-          text: roboText
+          text: roboText,
+          robo:true
         }]);
+        //setSwitchText[arrayNum](true)
   };
 
    useEffect(()=>{
@@ -47,14 +53,15 @@ function App() {
     
   },[messages])
 
-  const userMessage = ()=>{
+  const userMessage = (num)=>{
     setMessages(
       [...messages, 
         { 
           id: messages.length, 
-          text: textData
+          text: textData,
+          robo:false
         }]);
-        //setSwitchText(false)
+        //setSwitchText[1](false)
   }
 
   useEffect(() => {
