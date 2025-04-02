@@ -26,12 +26,12 @@ function App() {
   const [messages, setMessages] = useState([]);
   const[textData,setTextData] = useState("")
   const[triggerTextBox, setTriggerTextBox] = useState(false)
-  const[switchText, setSwitchText] = useState()
+  const[switchText, setSwitchText] = useState([])
   const messagesEndRef = useRef(null);
   const roboStyle = "w-40 h-auto bg-blue-500 text-white p-2 rounded-lg ml-2"
   const userStyle = "w-40 h-auto bg-white text-stone-700 p-2 rounded-lg ml-2"
   const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
-  const userPic = <div className='text-white mt-2 ml-10'>You:</div>
+  const userPic = <div className='text-white mt-2 ml-18'>You:</div>
 
   const addMessage = (roboText) => {
     setMessages(
@@ -41,12 +41,19 @@ function App() {
           text: roboText,
       
         }]);
-        setSwitchText(true)
+        
+        setSwitchText((prev)=>(
+          [...prev,
+            true
+          ]
+        ))
+
+
   };
 
   
 
-  const userMessage = ()=>{
+  const userMessage = (newState)=>{
     setMessages(
       [...messages, 
         { 
@@ -54,7 +61,12 @@ function App() {
           text: textData,
          
         }]);
-       setSwitchText(false)
+        setSwitchText((prev)=>(
+          [...prev,
+            false
+          ]
+        ))
+       setTextData("")
   }
 
   useEffect(() => {
@@ -117,7 +129,7 @@ function App() {
 
 
 
-            <div className={`absolute w-full h-auto`} style={{left: `${scaleUp.positionX+20}px`, top: `${scaleUp.positionY-80}px`}}>
+            <div className={`absolute w-full h-80`} style={{left: `${scaleUp.positionX+20}px`, top: `${scaleUp.positionY-80}px`}}>
             <div className={`relative w-24 max-w-24 h-auto bg-blue-500 text-white text-sm rounded-xl px-4 py-2 transition-all duration-700 ease-in-out
               ${timerSet ? "opacity-100":"opacity-0"}`}>
             <div className="absolute bottom-0 left-4 w-4 h-4 bg-blue-500 rotate-45 translate-y-1"></div>
@@ -139,38 +151,39 @@ function App() {
             </div>
             </div>
 
-            <div className=' w-full h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'>
+            <div className=' w-full h-96'>
 
-                <div className="w-full h-80 relative flex flex-col items-start gap-2 p-4 ">
+                <div className="w-full h-80 relative flex flex-col items-start gap-2 p-4  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 ">
             
                   {messages.map((msg) => (
-                    <div key={msg.id} className='flex flex-row'><div>{switchText ? roboPic : userPic}</div>
+                    <div key={msg.id} className='flex flex-row'><div>{switchText[msg.id] ? roboPic : userPic}</div>
                     <motion.div
                       
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.7, ease: "easeOut" }}
-                      className={switchText ? roboStyle : userStyle}
+                      className={switchText[msg.id]  ? roboStyle : userStyle}
                     >
                       {msg.text}
                     </motion.div></div> ))}
                  
 
-                      {/* <div ref={messagesEndRef} /> */}                   
+                       <div ref={messagesEndRef} />                 
                   </div>
                   
      
-              
+              <div className='fixed'>
              
                { triggerTextBox && (<div className='relative w-full h-14'>
                 <textarea 
-                    className="w-[80%] h-10 ml-2 mt-2 bg-stone-800 resize-none overflow-y-auto text-white p-2 leading-normal"
+                    className="w-[90%] h-10 ml-2 mt-2 bg-stone-800 resize-none overflow-y-auto text-white p-2 leading-normal"
                     placeholder="Type here..." value={textData} onChange={(e)=>setTextData(e.target.value)}
                   ></textarea>
-                  <div className='absolute top-4 left-62' onClick={userMessage}>{sendIcon}</div>
+                  <div className='absolute top-4 left-58' onClick={userMessage}>{sendIcon}</div>
                    
 
                   </div>)}
+                  </div>
 
               
 
