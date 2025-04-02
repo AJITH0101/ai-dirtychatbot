@@ -1,11 +1,15 @@
-
 import robot from './assets/robot.webp'
 import roboImg from './assets/roboImg.webp'
 import Typewriter from "typewriter-effect";
 import { motion } from "framer-motion";
 import { BiSolidSend } from "react-icons/bi";
+import { GoogleGenAI } from "@google/genai";
 
 const sendIcon = <BiSolidSend color='white' size={18} />
+
+const VITE_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB5e-M-zkQUQblTxrqjFRHwtzYWnyGeyyw"
+const ai = new GoogleGenAI({ apiKey: VITE_API_URL });               
+
 
 
 import './App.css'
@@ -31,9 +35,77 @@ function App() {
   const roboStyle = "w-40 h-auto bg-blue-500 text-white p-2 rounded-lg ml-2"
   const userStyle = "w-40 h-auto bg-white text-stone-700 p-2 rounded-lg ml-2"
   const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
-  const userPic = <div className='text-white mt-2 ml-18'>You:</div>
+  const userPic = <div className='text-white mt-2 ml-8'>You:</div>
+
+
+
+
+/*
+
+  const generateBotResponse = async(history)=>{
+
+   history = history.map(({role,text})=>({role, parts:[{text}]}))
+
+    const requestOption = {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({contents:history})
+
+    }
+    try {
+      const response = await fetch(import.meta.API_URL, requestOption)
+      const data = await response.json()
+      if(!response.ok) throw new Error(data.error.message || "Something went wrong")
+        console.log(data);        
+      
+    } catch (error) {
+      console.log(error);
+      
+      
+    }
+
+  }
+
+  */
+
+  useEffect(() => {
+   
+    const testAPI = async () => {
+      const API_KEY = import.meta.env.VITE_API_KEY;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+    
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: "which is the longest river in India" }] }],
+          }),
+        });
+    
+        const data = await response.json();
+        console.log("Full API Response:", data); // Log full response
+    
+        if (!response.ok) {
+          throw new Error(data.error.message || "Unknown API error");
+        }
+        
+        console.log("AI Response:", data);
+      } catch (error) {
+        console.error("Fetch Error:", error.message);
+      }
+    };
+    
+
+    testAPI();
+    //console.log("API Key:", import.meta.env.VITE_API_KEY);
+  }, []);
+
+ 
 
   const addMessage = (roboText) => {
+
+    
     setMessages(
       [...messages, 
         { 
@@ -53,7 +125,35 @@ function App() {
 
   
 
-  const userMessage = (newState)=>{
+  const userMessage = ()=>{
+    async function testGeminiAPI() {
+      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key=${import.meta.env.VITE_API_URL}`;
+    
+      const requestBody = {
+        contents: [{ role: "user", parts: [{ text: "Hello, Gemini! Can you respond?" }] }],
+      };
+    
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestBody),
+        });
+    
+        const data = await response.json();
+        console.log("✅ API Response:", data);
+    
+        if (data.error) {
+          console.error("❌ API Error:", data.error.message);
+        }
+      } catch (error) {
+        console.error("❌ Request Failed:", error);
+      }
+    }
+    
+    testGeminiAPI();
+ 
+   //generateBotResponse(textData)
     setMessages(
       [...messages, 
         { 
@@ -179,8 +279,11 @@ function App() {
                     className="w-[90%] h-10 ml-2 mt-2 bg-stone-800 resize-none overflow-y-auto text-white p-2 leading-normal"
                     placeholder="Type here..." value={textData} onChange={(e)=>setTextData(e.target.value)}
                   ></textarea>
-                  <div className='absolute top-4 left-58' onClick={userMessage}>{sendIcon}</div>
-                   
+                  <div className='absolute top-4 left-58' onClick={() => {
+                          if (textData.trim() !== "") {
+                            userMessage();
+                          }
+                        }}>{sendIcon}</div>                   
 
                   </div>)}
                   </div>
