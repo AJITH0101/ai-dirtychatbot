@@ -30,7 +30,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const[textData,setTextData] = useState("")
   const[triggerTextBox, setTriggerTextBox] = useState(false)
-  const[switchText, setSwitchText] = useState([true])
+  const[switchText, setSwitchText] = useState([])
   const messagesEndRef = useRef(null);
   const roboStyle = "w-40 h-auto bg-blue-500 text-white p-2 rounded-lg ml-2"
   const userStyle = "w-40 h-auto bg-white text-stone-700 p-2 rounded-lg ml-2"
@@ -44,7 +44,9 @@ function App() {
   Regardless of the input, always reply with "Hello! How can I help you?.
 `;
 
-
+useEffect(()=>{
+  console.log(messages);
+},[messages])
 
 
   const fetchData = async(askAI)=>{
@@ -76,17 +78,14 @@ function App() {
   const addMessage = (roboText) => {
 
     
-    setMessages(
-      [...messages, 
-        { 
-          id: messages.length, 
-          text: roboText,
-      
-        }]);
+    setMessages((prevMessages) => [
+      ...prevMessages, 
+      { id: prevMessages.length, text: roboText }
+    ]);
         
         setSwitchText((prev)=>(
           [...prev,
-            false
+            true
           ]
         ))
 console.log(messages.text);
@@ -100,21 +99,18 @@ console.log(messages.text);
    // console.log(textData);
     
     
-    setMessages(
-      [...messages, 
-        { 
-          id: messages.length, 
-          text: textData,
-         
-        }]);
+   setMessages((prevMessages) => [
+    ...prevMessages, 
+    { id: prevMessages.length, text: textData }
+  ]);
         setSwitchText((prev)=>(
           [...prev,
-            true
+            false
           ]
         ))
        setTextData("")
        fetchData(textData)
-       console.log(messages);
+       
   }
 
   useEffect(() => {
