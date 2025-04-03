@@ -31,6 +31,12 @@ function App() {
   const[textData,setTextData] = useState("")
   const[triggerTextBox, setTriggerTextBox] = useState(false)
   const[switchText, setSwitchText] = useState([])
+  const today = new Date().toISOString().split("T")[0];
+  const[aiTraining,setAiTraining] = useState( `
+ 
+ 
+`)
+
   const messagesEndRef = useRef(null);
   const roboStyle = "w-40 h-auto bg-blue-500 text-white p-2 rounded-lg ml-2"
   const userStyle = "w-40 h-auto bg-white text-stone-700 p-2 rounded-lg ml-2"
@@ -44,9 +50,9 @@ function App() {
   Regardless of the input, always reply with "Hello! How can I help you?.
 `;
 
-useEffect(()=>{
-  console.log(messages);
-},[messages])
+ useEffect(()=>{
+ fetchData("write a story about a magic backpack")
+ },[])
 
 
   const fetchData = async(askAI)=>{
@@ -63,8 +69,11 @@ useEffect(()=>{
     )
   
     //console.log("AI Response",response.data.candidates[0].content.parts[0].text);
-    const aiResponse = response.data.candidates[0].content.parts[0].text
-    addMessage(aiResponse)
+    const aiResponse = response.data.candidates[0].content.parts[0].text.replace(/\*/g, '').trim();
+
+console.log(aiResponse);
+
+    //addMessage(aiResponse)
     
       
     } catch (error) {
@@ -109,7 +118,9 @@ console.log(messages.text);
           ]
         ))
        setTextData("")
-       fetchData(textData)
+       setAiTraining((prevText) => `${prevText}\n${textData}`);
+       //fetchData(aiTraining)
+     //fetchData(textData)
        
   }
 
