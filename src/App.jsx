@@ -4,13 +4,12 @@ import roboImg from './assets/roboImg.webp'
 import Typewriter from "typewriter-effect";
 import { motion } from "framer-motion";
 import { BiSolidSend } from "react-icons/bi";
-import { GoogleGenAI } from "@google/genai";
+
 
 const sendIcon = <BiSolidSend color='white' size={18} />
-
-const VITE_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB5e-M-zkQUQblTxrqjFRHwtzYWnyGeyyw"
-const ai = new GoogleGenAI({ apiKey: VITE_API_URL });               
-
+              
+const API_KEY = import.meta.env.VITE_API_KEY;
+const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
 
 import './App.css'
@@ -31,118 +30,48 @@ function App() {
   const [messages, setMessages] = useState([]);
   const[textData,setTextData] = useState("")
   const[triggerTextBox, setTriggerTextBox] = useState(false)
-  const[switchText, setSwitchText] = useState([])
+  const[switchText, setSwitchText] = useState([true])
   const messagesEndRef = useRef(null);
   const roboStyle = "w-40 h-auto bg-blue-500 text-white p-2 rounded-lg ml-2"
   const userStyle = "w-40 h-auto bg-white text-stone-700 p-2 rounded-lg ml-2"
   const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
   const userPic = <div className='text-white mt-2 ml-8'>You:</div>
+  const trainAI = `
+  Your name is Matty.
+  This chat is about Aayush Moisturiser, a completely ayurvedic product.
+  The company's contact is +91 9988776655.
+  If someone asks something else, say "I don't have much idea about that."
+  Regardless of the input, always reply with "Hello! How can I help you?.
+`;
 
 
 
 
-/*
+  const fetchData = async(askAI)=>{
+ 
 
-  const generateBotResponse = async(history)=>{
-
-   history = history.map(({role,text})=>({role, parts:[{text}]}))
-
-    const requestOption = {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({contents:history})
-
-    }
     try {
-      const response = await fetch(import.meta.API_URL, requestOption)
-      const data = await response.json()
-      if(!response.ok) throw new Error(data.error.message || "Something went wrong")
-        console.log(data);        
+      const response = await axios.post(url,
+      {
+       contents: [{ parts: [{ text: askAI }] }] 
+      },
+      {
+        headers: { "Content-Type": "application/json" }
+      }
+    )
+  
+    //console.log("AI Response",response.data.candidates[0].content.parts[0].text);
+    const aiResponse = response.data.candidates[0].content.parts[0].text
+    addMessage(aiResponse)
+    
       
     } catch (error) {
       console.log(error);
       
       
     }
-
-  }
-
-  */
-
-  useEffect(()=>{
-
-  
- 
-const fetchData = async()=>{
-  const API_KEY = import.meta.env.VITE_API_KEY;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
-
-  try {
-    const response = await axios.post(url,
-    {
-     contents: [{ parts: [{ text: "what is your name" }] }] 
-    },
-    {
-      headers: { "Content-Type": "application/json" }
-    }
-  )
-
-  console.log("AI Response",response.data);
-  
-    
-  } catch (error) {
-    console.log(error);
-    
-    
-  }
- 
-}
-
-fetchData()
-
-
-
-  },[])
-
-
-
-
-  /*
-
-  useEffect(() => {
    
-    const testAPI = async () => {
-      const API_KEY = import.meta.env.VITE_API_KEY;
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
-    
-      try {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: "what is your name" }] }],
-          }),
-        });
-    
-        const data = await response.json();
-        console.log("Full API Response:", data); // Log full response
-    
-        if (!response.ok) {
-          throw new Error(data.error.message || "Unknown API error");
-        }
-        
-        console.log("AI Response:", data);
-      } catch (error) {
-        console.error("Fetch Error:", error.message);
-      }
-    };
-    
-
-    testAPI();
-    //console.log("API Key:", import.meta.env.VITE_API_KEY);
-  }, []);
-
- */
+  }
 
   const addMessage = (roboText) => {
 
@@ -157,44 +86,20 @@ fetchData()
         
         setSwitchText((prev)=>(
           [...prev,
-            true
+            false
           ]
         ))
+console.log(messages.text);
 
 
   };
 
   
 
-  const userMessage = ()=>{
-    async function testGeminiAPI() {
-      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key=${import.meta.env.VITE_API_URL}`;
+  const userMessage = (textData)=>{
+   // console.log(textData);
     
-      const requestBody = {
-        contents: [{ role: "user", parts: [{ text: "Hello, Gemini! Can you respond?" }] }],
-      };
     
-      try {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(requestBody),
-        });
-    
-        const data = await response.json();
-        console.log("✅ API Response:", data);
-    
-        if (data.error) {
-          console.error("❌ API Error:", data.error.message);
-        }
-      } catch (error) {
-        console.error("❌ Request Failed:", error);
-      }
-    }
-    
-    testGeminiAPI();
- 
-   //generateBotResponse(textData)
     setMessages(
       [...messages, 
         { 
@@ -204,15 +109,19 @@ fetchData()
         }]);
         setSwitchText((prev)=>(
           [...prev,
-            false
+            true
           ]
         ))
        setTextData("")
+       fetchData(textData)
+       console.log(messages);
   }
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]); // Scrolls down when messages update
+
+
 
   useEffect(()=>{
     setRoboappear(true)
@@ -240,7 +149,9 @@ fetchData()
     const timer_3 = setTimeout(()=>{
       setRoboappear(false)  
       setTriggerTextBox(true)
-      addMessage("Hello! Ajith")
+
+      fetchData(trainAI)
+      //addMessage("Hello! Ajith")
     },4000)
     
 
@@ -322,7 +233,7 @@ fetchData()
                   ></textarea>
                   <div className='absolute top-4 left-58' onClick={() => {
                           if (textData.trim() !== "") {
-                            userMessage();
+                            userMessage(textData);
                           }
                         }}>{sendIcon}</div>                   
 
@@ -345,23 +256,3 @@ fetchData()
 }
 
 export default App
-{/* { !roboAppear && (<div>
-  <div className='w-32 h-12 bg-blue-500 rounded-lg m-2'>
-    <img src={roboImg} alt='robo' className='w-10 h-10 rounded-full bg-black '/>
-  </div>
-</div>)} 
-//curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY" 
-//API Key AIzaSyB5e-M-zkQUQblTxrqjFRHwtzYWnyGeyyw
-
-curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY" \
--H 'Content-Type: application/json' \
--X POST \
--d '{
-  "contents": [{
-    "parts":[{"text": "Explain how AI works"}]
-    }]
-   }'
-
-
-
-*/}
