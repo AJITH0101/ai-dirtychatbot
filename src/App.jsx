@@ -1,3 +1,4 @@
+import axios from 'axios'
 import robot from './assets/robot.webp'
 import roboImg from './assets/roboImg.webp'
 import Typewriter from "typewriter-effect";
@@ -68,6 +69,46 @@ function App() {
 
   */
 
+  useEffect(()=>{
+
+  
+ 
+const fetchData = async()=>{
+  const API_KEY = import.meta.env.VITE_API_KEY;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+  try {
+    const response = await axios.post(url,
+    {
+     contents: [{ parts: [{ text: "what is your name" }] }] 
+    },
+    {
+      headers: { "Content-Type": "application/json" }
+    }
+  )
+
+  console.log("AI Response",response.data);
+  
+    
+  } catch (error) {
+    console.log(error);
+    
+    
+  }
+ 
+}
+
+fetchData()
+
+
+
+  },[])
+
+
+
+
+  /*
+
   useEffect(() => {
    
     const testAPI = async () => {
@@ -79,7 +120,7 @@ function App() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: "which is the longest river in India" }] }],
+            contents: [{ parts: [{ text: "what is your name" }] }],
           }),
         });
     
@@ -101,7 +142,7 @@ function App() {
     //console.log("API Key:", import.meta.env.VITE_API_KEY);
   }, []);
 
- 
+ */
 
   const addMessage = (roboText) => {
 
