@@ -66,7 +66,10 @@ const hasFetched = useRef(false);
         ]
       };
     
-     const updatedHistory = [systemPrompt, ...chatHistory];
+     ///const updatedHistory = [systemPrompt, ...chatHistory];
+     setChatHistory((prev)=>([...prev,systemPrompt]))
+     const updatedHistory = [systemPrompt,...chatHistory]
+
     
       try {
         const response = await axios.post(
@@ -94,7 +97,7 @@ const hasFetched = useRef(false);
         //   role: "model",
         //   parts: [{ text: aiResponse }]
         // };
-        setChatHistory(prev => [...prev, updatedHistory]);
+        //setChatHistory(prev => [...prev, updatedHistory]);
       } catch (error) {
         console.log("Gemini Error:", error);
       }
@@ -170,8 +173,9 @@ const hasFetched = useRef(false);
           ]
         };
       
-       const updatedHistory = [systemPrompt, ...chatHistory];
-       setChatHistory(prev => [...prev, updatedHistory]);
+      // const updatedHistory = [systemPrompt, ...chatHistory];
+      setChatHistory((prev)=>([...prev,systemPrompt]))
+       //setChatHistory(prev => [...prev, updatedHistory]);
 
 console.log(messages.text);
 
@@ -203,6 +207,10 @@ console.log(messages.text);
         
        
   }
+
+
+
+  
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
