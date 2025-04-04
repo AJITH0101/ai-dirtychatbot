@@ -37,6 +37,10 @@ function App() {
  
 `)
 
+
+const [chatHistory, setChatHistory] = useState([]);
+const [userInput, setUserInput] = useState('');
+
   const messagesEndRef = useRef(null);
   const roboStyle = "w-40 h-auto bg-blue-500 text-white p-2 rounded-lg ml-2"
   const userStyle = "w-40 h-auto bg-white text-stone-700 p-2 rounded-lg ml-2"
@@ -45,19 +49,74 @@ function App() {
   const trainAI = `
   start with Hi, I m Kundiyamma
 `;
+const hasFetched = useRef(false);
+  useEffect(()=>{
+   // 
 
-//  useEffect(()=>{
-//  fetchData("write a story about a magic backpack")
-//  },[])
+    const initialFetch = async () => {
+      if (hasFetched.current) return;
+     hasFetched.current = true;
+
+      const systemPrompt = {
+        role: "user",
+        parts: [
+          {
+            text: "Hello"
+          }
+        ]
+      };
+    
+     const updatedHistory = [systemPrompt, ...chatHistory];
+    
+      try {
+        const response = await axios.post(
+          url,
+          {
+            contents: updatedHistory          ////////////////////////////////////////////
+          },
+          {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+        );
+    
+        const aiResponse =
+          response.data.candidates?.[0]?.content?.parts?.[0]?.text
+            ?.replace(/\*/g, "")
+            ?.trim() || "No response";
+    
+        // Add AI response to UI
+        addMessage(aiResponse);
+    
+        // Update chat history
+        // const newModelMessage = {
+        //   role: "model",
+        //   parts: [{ text: aiResponse }]
+        // };
+        setChatHistory(prev => [...prev, updatedHistory]);
+      } catch (error) {
+        console.log("Gemini Error:", error);
+      }
+    };
+    
+    initialFetch();
+    
+  },[])
 
 
-  const fetchData = async(askAI)=>{
+  const fetchData = async(askAI,setRole)=>{
+
+    const newUserMessage = { role: setRole, parts: [{ text: askAI }] };
+    const updatedHistory = [...chatHistory, newUserMessage];
+
+    setChatHistory(updatedHistory);
  
 
     try {
       const response = await axios.post(url,
       {
-       contents: [{ parts: [{ text: askAI }] }] 
+        contents: updatedHistory,
       },
       {
         headers: { "Content-Type": "application/json" }
@@ -65,24 +124,31 @@ function App() {
     )
   
     //console.log("AI Response",response.data.candidates[0].content.parts[0].text);
-    const aiResponse = response.data.candidates[0].content.parts[0].text.replace(/\*/g, '').trim();
+   const aiResponse = response.data.candidates[0].content.parts[0].text.replace(/\*/g, '').trim();
+    //const aiResponse = response.data.candidates?.[0]?.content?.parts?.[0]?.text.replace(/\*/g, '').trim() || 'No response';
 
 //console.log(aiResponse);
 
-    addMessage(aiResponse)
-    
+   addMessage(aiResponse)
+
+    const newModelMessage = {
+      role: 'model',
+      parts: [{ text: replyText }],
+    };
+    setChatHistory((prev) => [...prev, newModelMessage]);
       
     } catch (error) {
-      console.log(error);
-      
+      console.log(error);      
       
     }
+
+    console.log(chatHistory);   
    
   }
 
+
   const addMessage = (roboText) => {
 
-    
     setMessages((prevMessages) => [
       ...prevMessages, 
       { id: prevMessages.length, text: roboText }
@@ -93,8 +159,21 @@ function App() {
             true
           ]
         ))
-console.log(messages.text);
 
+
+        const systemPrompt = {
+          role: "model",
+          parts: [
+            {
+              text: roboText
+            }
+          ]
+        };
+      
+       const updatedHistory = [systemPrompt, ...chatHistory];
+       setChatHistory(prev => [...prev, updatedHistory]);
+
+console.log(messages.text);
 
   };
 
@@ -115,12 +194,12 @@ console.log(messages.text);
         ))
        setTextData("")
 
-       history.push(textData)
-       const historyString = history.join("\n");
-       setAiTraining((prevText) => `${prevText}\n${textData}`);
+      // history.push(textData)
+       //const historyString = history.join("\n");
+      // setAiTraining((prevText) => `${prevText}\n${textData}`);
        //fetchData(aiTraining)
-        fetchData(historyString)
-        console.log(historyString);
+        fetchData(textData,"user")
+       /// console.log(historyString);
         
        
   }
@@ -158,7 +237,7 @@ console.log(messages.text);
       setRoboappear(false)  
       setTriggerTextBox(true)
 
-     fetchData(trainAI)
+     //fetchData(trainAI)
       //addMessage("Hello! Ajith")
     },4000)
     
