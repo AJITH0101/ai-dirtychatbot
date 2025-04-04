@@ -15,7 +15,7 @@ const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-
 import './App.css'
 import { useEffect, useState,useRef } from 'react'
 const animatedRobotSrc = `${robot}?t=${Date.now()}`;
-
+const history = []
 function App() {
 
   const[scaleUp,setScaleUp] = useState({
@@ -43,16 +43,12 @@ function App() {
   const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
   const userPic = <div className='text-white mt-2 ml-8'>You:</div>
   const trainAI = `
-  Your name is Matty.
-  This chat is about Aayush Moisturiser, a completely ayurvedic product.
-  The company's contact is +91 9988776655.
-  If someone asks something else, say "I don't have much idea about that."
-  Regardless of the input, always reply with "Hello! How can I help you?.
+  start with Hi, I m Kundiyamma
 `;
 
- useEffect(()=>{
- fetchData("write a story about a magic backpack")
- },[])
+//  useEffect(()=>{
+//  fetchData("write a story about a magic backpack")
+//  },[])
 
 
   const fetchData = async(askAI)=>{
@@ -71,9 +67,9 @@ function App() {
     //console.log("AI Response",response.data.candidates[0].content.parts[0].text);
     const aiResponse = response.data.candidates[0].content.parts[0].text.replace(/\*/g, '').trim();
 
-console.log(aiResponse);
+//console.log(aiResponse);
 
-    //addMessage(aiResponse)
+    addMessage(aiResponse)
     
       
     } catch (error) {
@@ -118,9 +114,14 @@ console.log(messages.text);
           ]
         ))
        setTextData("")
+
+       history.push(textData)
+       const historyString = history.join("\n");
        setAiTraining((prevText) => `${prevText}\n${textData}`);
        //fetchData(aiTraining)
-     //fetchData(textData)
+        fetchData(historyString)
+        console.log(historyString);
+        
        
   }
 
@@ -157,7 +158,7 @@ console.log(messages.text);
       setRoboappear(false)  
       setTriggerTextBox(true)
 
-      fetchData(trainAI)
+     fetchData(trainAI)
       //addMessage("Hello! Ajith")
     },4000)
     
