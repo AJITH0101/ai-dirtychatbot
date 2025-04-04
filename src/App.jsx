@@ -46,8 +46,9 @@ const [userInput, setUserInput] = useState('');
   const userStyle = "w-40 h-auto bg-white text-stone-700 p-2 rounded-lg ml-2"
   const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
   const userPic = <div className='text-white mt-2 ml-8'>You:</div>
-  const trainAI = `
-  start with Hi, I m Kundiyamma
+  const aiInitialTraining = `
+  Your name is Matty, respond the entire conversation as Matty.Do n't take this as a question to answer like alright, cool etc,
+  Start initial conversation with what the hell you want?.do n't exceed the conversation length 10 words.
 `;
 const hasFetched = useRef(false);
   useEffect(()=>{
@@ -61,12 +62,12 @@ const hasFetched = useRef(false);
         role: "user",
         parts: [
           {
-            text: "Hello"
+            text: aiInitialTraining
           }
         ]
       };
     
-     ///const updatedHistory = [systemPrompt, ...chatHistory];
+
      setChatHistory((prev)=>([...prev,systemPrompt]))
      const updatedHistory = [systemPrompt,...chatHistory]
 
@@ -75,7 +76,7 @@ const hasFetched = useRef(false);
         const response = await axios.post(
           url,
           {
-            contents: updatedHistory          ////////////////////////////////////////////
+            contents: updatedHistory         
           },
           {
             headers: {
@@ -89,15 +90,9 @@ const hasFetched = useRef(false);
             ?.replace(/\*/g, "")
             ?.trim() || "No response";
     
-        // Add AI response to UI
+
         addMessage(aiResponse);
-    
-        // Update chat history
-        // const newModelMessage = {
-        //   role: "model",
-        //   parts: [{ text: aiResponse }]
-        // };
-        //setChatHistory(prev => [...prev, updatedHistory]);
+
       } catch (error) {
         console.log("Gemini Error:", error);
       }
@@ -112,9 +107,7 @@ const hasFetched = useRef(false);
 
     const newUserMessage = { role: setRole, parts: [{ text: askAI }] };
     const updatedHistory = [...chatHistory, newUserMessage];
-
-    setChatHistory(updatedHistory);
- 
+    setChatHistory(updatedHistory); 
 
     try {
       const response = await axios.post(url,
@@ -126,7 +119,7 @@ const hasFetched = useRef(false);
       }
     )
   
-    //console.log("AI Response",response.data.candidates[0].content.parts[0].text);
+ 
    const aiResponse = response.data.candidates[0].content.parts[0].text.replace(/\*/g, '').trim();
     //const aiResponse = response.data.candidates?.[0]?.content?.parts?.[0]?.text.replace(/\*/g, '').trim() || 'No response';
 
@@ -210,7 +203,7 @@ console.log(messages.text);
 
 
 
-  
+
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
