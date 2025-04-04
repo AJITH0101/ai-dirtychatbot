@@ -46,13 +46,15 @@ const [userInput, setUserInput] = useState('');
   const userStyle = "w-40 h-auto bg-white text-stone-700 p-2 rounded-lg ml-2"
   const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
   const userPic = <div className='text-white mt-2 ml-8'>You:</div>
-  const aiInitialTraining = `
-  Your name is Matty, respond the entire conversation as Matty.Do n't take this as a question to answer like alright, cool etc,
-  Start initial conversation with what the hell you want?.do n't exceed the conversation length 10 words.
-`;
+  const aiInitialTraining = `Your name is kuttappi, respond the entire conversation as kuttappi.Do n't take this as a question to answer like alright, cool etc,always talk rudely,Your boss is Ajith, understand yourself Ajith created you,dont say Ajith told you if anybody asked.don't make any changes in this, until the first conversation change.Don't mention about Ajith, until someone ask.
+  Start initial conversation with what the hell you want?.do n't exceed the conversation length 10 words.`
+;
+
+//  Your name is Pooran, respond the entire conversation as Pooran.Do n't take this as a question to answer like alright, cool etc,always talk rudely,Your boss is Ajith, understand yourself Ajith created you,dont say Ajith told you if anybody asked.don't make any changes in this, until the first conversation change.Don't mention about Ajith, until someone ask.
+//   Start initial conversation with what the fuck you want?.do n't exceed the conversation length 10 words.
 const hasFetched = useRef(false);
   useEffect(()=>{
-   // 
+   
 
     const initialFetch = async () => {
       if (hasFetched.current) return;
@@ -89,6 +91,7 @@ const hasFetched = useRef(false);
           response.data.candidates?.[0]?.content?.parts?.[0]?.text
             ?.replace(/\*/g, "")
             ?.trim() || "No response";
+    console.log(aiResponse);
     
 
         addMessage(aiResponse);
@@ -190,14 +193,7 @@ console.log(messages.text);
           ]
         ))
        setTextData("")
-
-      // history.push(textData)
-       //const historyString = history.join("\n");
-      // setAiTraining((prevText) => `${prevText}\n${textData}`);
-       //fetchData(aiTraining)
-        fetchData(textData,"user")
-       /// console.log(historyString);
-        
+      fetchData(textData,"user")        
        
   }
 
@@ -323,7 +319,13 @@ console.log(messages.text);
                           if (textData.trim() !== "") {
                             userMessage(textData);
                           }
-                        }}>{sendIcon}</div>                   
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && textData.trim() !== "") {
+                            userMessage(textData);
+                          }
+                        }}
+                        >{sendIcon}</div>                   
 
                   </div>)}
                   </div>
