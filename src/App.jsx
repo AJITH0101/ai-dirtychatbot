@@ -49,7 +49,7 @@ const [chatHistory, setChatHistory] = useState([]);
 
   const messagesEndRef = useRef(null);
   const roboStyle = "w-40 h-auto bg-red-700 text-white p-2 shadow-lg shadow-black rounded-lg ml-2"
-  const userStyle = "w-40 h-auto bg-stone-500 text-white shadow-lg shadow-black p-2 rounded-lg ml-2"
+  const userStyle = "w-40 h-auto bg-stone-300 text-stone-700 shadow-lg shadow-black p-2 rounded-lg ml-2"
   //const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
   const roboPic = <div className='text-black  mt-2 ml-4 text-sm text-red-700'><img src={roboImg} alt='robo' className='w-8 h-8 shadow-lg shadow-black  mt-1 rounded-full'/>Robo:</div>
   const userPic = <div className='text-black mt-2 ml-14 text-sm'><img src={you} alt='you' className='w-8 h-8 shadow-lg shadow-black  mt-1 rounded-full bg-stone-300'/>You:</div>
@@ -293,24 +293,27 @@ console.log(messages.text);
   return (
     <>
     <div className='relative w-full h-[100dvh]  flex justify-center items-center'>
-        <div className='relative lg:w-1/4 md:1/4 w-[90%] lg:h-2/3 md:h-2/3 h-2/3 border border-green-500 bg-white rounded-lg flex justify-center'>
-          <div className='absolute top-0 left-[70%] flex flex-row z-10 bg-red-500'> 
-            <div className='ml-1 mt-1.5 text-stone-700 transition-transform duration-300 hover:scale-110 hover:text-red-700' onClick={clearChat}>{clearIcon}</div>
-            <div className='ml-1 mt-1 text-stone-700 transition-transform duration-300 hover:scale-110 hover:text-red-700 '>{minimize}</div>   
-              <div className='ml-1 mt-1 text-stone-700 transition-transform duration-300 hover:scale-110 hover:text-red-700'>{close}</div>
+        <div className='relative lg:w-1/4 md:1/4 w-[90%] lg:h-6/7 md:h-6/7 h-5/6  bg-white rounded-lg flex justify-center items-center'>
+          <div className='absolute top-0 left-0 w-full h-12 flex flex-row z-10 bg-red-700 shadow-lg shadow-black'> 
+            <div className='w-8 h-8 ml-[68%] mt-1.5 text-stone-300 transition-transform duration-300 hover:scale-110 hover:text-stone-700 shadow-md shadow-black rounded-full flex justify-center items-center' onClick={clearChat}>{clearIcon}</div>
+            <div className='w-8 h-8 ml-1 mt-1 text-stone-300 transition-transform duration-300 hover:scale-110 hover:text-stone-700 shadow-md shadow-black rounded-full flex justify-center items-center'>{minimize}</div>   
+              <div className='w-8 h-8 ml-1 mt-1 text-stone-300 transition-transform duration-300 hover:scale-110 hover:text-stone-700 shadow-md shadow-black rounded-full flex justify-center items-center'>{close}</div>
   
                 </div>  
+                <div className='absolute'>
                 <img 
                   src={animatedRobotSrc} 
                   alt="robot" 
-                  className={`absolute w-24 h-auto transition-all duration-800 ease-in-out ${scaleUp.scaling ? "scale-100" : "scale-200"} ${roboAppear ? "opacity-100":"opacity-0"}`}
+                  className={`w-24 h-auto  transition-all duration-800 ease-in-out ${scaleUp.scaling ? "scale-100" : "scale-200"} ${roboAppear ? "opacity-100":"opacity-0"}`}
+                   />
                  
-                />
+              
+                </div>
 
 
 
 
-            <div className='relative w-full h-5/6 border border-yellow-500'>
+            <div className='relative w-full h-4/5'>
 
                 <div className="w-full h-full relative flex flex-col items-start gap-2 p-4  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 ">
             
@@ -333,7 +336,7 @@ console.log(messages.text);
      
               <div className='fixed'   >
              
-               { triggerTextBox && (<div className='relative w-full h-8 mt-2'>
+               { triggerTextBox && (<div className='relative w-full h-8 '>
                 <textarea 
                     className="w-full h-10 ml-4 mt-1 bg-stone-200 border border-stone-800 rounded-full resize-none text-stone-800 p-2 leading-normal overflow-hidden whitespace-pre-wrap break-words"
                     placeholder="Spill here..." value={textData} onChange={(e)=>setTextData(e.target.value)}
@@ -358,10 +361,9 @@ console.log(messages.text);
                   </div>
 
               
-                  <div className={`absolute top-60 left-22 text-red-600 text-3xl text-center ${roboAppear ? "opacity-100":"opacity-0"}`}>𝓐𝓷𝓰𝓻𝔂 𝓡𝓸𝓫𝓸</div>
             </div> 
 
-
+            <div className={`absolute left-20 top-86 text-red-600 text-3xl text-center ${roboAppear ? "opacity-100":"opacity-0"}`}>𝓐𝓷𝓰𝓻𝔂 𝓡𝓸𝓫𝓸</div>
 
     </div>
     
