@@ -16,7 +16,7 @@ const minimize = <IoIosArrowDown  size={20}/>
 const clearIcon = <IoMdRefresh  size={23} />
 
 
-const sendIcon = <BiSolidSend color='gray' size={18} />
+const sendIcon = <BiSolidSend color='red' size={18} />
               
 const API_KEY = import.meta.env.VITE_API_KEY;
 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
@@ -34,8 +34,7 @@ function App() {
     positionY:100,
   
   })
-  // const[timerSet, setTimerset] = useState(false)
-  // const[timerSet1, setTimerset1] = useState(false) //used for type writing
+ 
   const[roboAppear,setRoboappear] = useState(false) //angry robo image
   const [messages, setMessages] = useState([]);
   const[textData,setTextData] = useState("")
@@ -46,14 +45,19 @@ function App() {
   //const[aiTraining,setAiTraining] = useState( ``);
 const [chatHistory, setChatHistory] = useState([]);
 const [isMinimized, setIsMinimized] = useState(false);
+
+const [isDragging, setIsDragging] = useState(false);
+const [start, setStart] = useState({ x: 0, y: 0 });
+const [position, setPosition] = useState({ x: 0, y: 0, dragged: false });
+
 //const [userInput, setUserInput] = useState('');
 
   const messagesEndRef = useRef(null);
   const roboStyle = "w-40 h-auto bg-red-700 text-white p-2 shadow-lg shadow-black rounded-lg ml-2"
   const userStyle = "w-40 h-auto bg-stone-300 text-stone-700 shadow-lg shadow-black p-2 rounded-lg ml-2"
   //const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
-  const roboPic = <div className='text-black  mt-2 ml-4 text-sm text-red-700'><img src={roboImg} alt='robo' className='w-8 h-8 shadow-lg shadow-black  mt-1 rounded-full'/>Robo:</div>
-  const userPic = <div className='text-black mt-2 ml-14 text-sm'><img src={you} alt='you' className='w-8 h-8 shadow-lg shadow-black  mt-1 rounded-full bg-stone-300'/>You:</div>
+  const roboPic = <div className='text-black  mt-2 ml-4 text-sm text-red-700 font-semibold'><img src={roboImg} alt='robo' className='w-8 h-8 shadow-lg shadow-black  mt-1 rounded-full'/>Robo:</div>
+  const userPic = <div className='text-black mt-2 ml-14 text-sm font-semibold'><img src={you} alt='you' className='w-8 h-8 shadow-lg shadow-black  mt-1 rounded-full bg-stone-300'/>You:</div>
   //const aiInitialTraining = `Your name is kuttappi, respond the entire conversation as kuttappi.Do n't take this as a question to answer like alright, cool etc,always talk smoothly,Your boss is Ajith, understand yourself Ajith created you,dont say Ajith told you if anybody asked.don't make any changes in this, until the first conversation change.Don't mention about Ajith, until someone ask.
   // Note:"Strictly, Speak only in English,must not use malayalam or any other languages in entire conversation, do n't exceed every conversation length above 10 words.Start initial conversation with, Hi, how can i help you?"`
 //;
@@ -66,7 +70,7 @@ const aiInitialTraining = `Your name is kuttappi, respond the entire conversatio
 //   Start initial conversation with what the fuck you want?.do n't exceed the conversation length 10 words.
 
 const hasFetched = useRef(false);
-
+const boxRef = useRef(null);
 
 
 useEffect(()=>{
@@ -88,6 +92,28 @@ useEffect(()=>{
 
 
 
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      const newX = e.clientX - start.x;
+      const newY = e.clientY - start.y;
+  
+      setPosition({
+        x: newX,
+        y: newY,
+        dragged: true, // ← THIS is where you put it
+      });
+    }
+  };
+  
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
   const resetAll=()=>{
 
     setRoboappear(true)  // this make the robo image apearence switching
@@ -303,8 +329,23 @@ console.log(messages.text);
   return (
     <>
     { closeTab &&
-    (<div className='relative w-full h-[100dvh]  flex justify-center items-center'>
-      <div className='w-full h-full  flex justify-center items-center'>
+    (<div className='relative w-full h-[100dvh]  flex justify-center items-center overflow-hidden' >
+     <div
+  ref={boxRef}
+  onMouseDown={handleMouseDown}
+  onMouseMove={handleMouseMove}
+  onMouseUp={handleMouseUp}
+  onMouseLeave={handleMouseUp}
+  className={`absolute flex justify-center items-center w-full h-full`}
+  style={{
+    transform: position.dragged
+      ? `translate(${position.x}px, ${position.y}px)`
+      : `translate(-50%, -50%)`,
+    left: position.dragged ? 0 : "50%",
+    top: position.dragged ? 0 : "50%",
+  }}
+>
+
         <div className={`relative lg:w-1/4 md:1/4 w-[90%]  bg-white rounded-lg flex justify-center items-center  transition-all duration-500 ease-in-out ${triggerTextBox ? "lg:h-6/7 md:h-6/7 h-5/6":"h-10"}`}>
           <div className='absolute top-0 left-0 w-full h-12 flex flex-row z-10 bg-red-700 shadow-lg shadow-black'> 
             <div className='w-8 h-8 ml-[68%] mt-1.5 text-stone-300 transition-transform duration-300 hover:scale-110 hover:text-stone-700 shadow-md shadow-black rounded-full flex justify-center items-center' onClick={clearChat}>{clearIcon}</div>
@@ -346,30 +387,37 @@ console.log(messages.text);
                   </div>
                   
      
-              <div className='fixed'>
+              <div className='flex flex-row w-full h-20'>
              
-               { triggerTextBox && (<div className='relative w-full h-8 '>
-                <textarea 
-                    className="w-full h-10 ml-4 mt-1 bg-stone-200 border border-stone-800 rounded-full resize-none text-stone-800 p-2 leading-normal overflow-hidden whitespace-pre-wrap break-words"
-                    placeholder="Spill here..." value={textData} onChange={(e)=>setTextData(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault(); // stops the new line
-                        if (textData.trim() !== "") {
-                          userMessage(textData);
-                        }
-                      }
-                    }}
-                  ></textarea>
-                  <div className='absolute top-4 left-62' onClick={() => {
-                          if (textData.trim() !== "") {
-                            userMessage(textData);
-                          }
-                        }}
-                     
-                        >{sendIcon}</div>                   
+              {triggerTextBox && (
+  <div className="relative w-full h-10 flex items-center justify-between px-4">
+    <textarea
+      className="w-full h-full bg-stone-200 border border-stone-800 rounded-full resize-none text-stone-800 py-2 pr-10 pl-4 leading-normal overflow-hidden whitespace-pre-wrap break-words"
+      placeholder="Spill here..."
+      value={textData}
+      onChange={(e) => setTextData(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (textData.trim() !== "") {
+            userMessage(textData);
+          }
+        }
+      }}
+    />
+    <div
+      className="absolute right-6 cursor-pointer text-xl text-stone-600 hover:text-stone-800"
+      onClick={() => {
+        if (textData.trim() !== "") {
+          userMessage(textData);
+        }
+      }}
+    >
+      {sendIcon}
+    </div>
+  </div>
+)}
 
-                  </div>)}
                   </div>
 
               
