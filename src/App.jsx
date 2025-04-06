@@ -8,12 +8,11 @@ import { BiSolidSend } from "react-icons/bi";
 import red_eyed from './assets/red_angry.webp'
 import { VscChromeClose } from "react-icons/vsc";
 import { FaMaximize } from "react-icons/fa6";
-import { TbWindowMinimize } from "react-icons/tb";
+import { IoIosArrowDown } from "react-icons/io";
 import { IoMdRefresh } from "react-icons/io";
 
-const close = <VscChromeClose  size={24} />
-const maximize = <FaMaximize  size={15}/>
-const minimize = <TbWindowMinimize  size={25}/>
+const close = <VscChromeClose  size={22} />
+const minimize = <IoIosArrowDown  size={20}/>
 const clearIcon = <IoMdRefresh  size={23} />
 
 
@@ -26,7 +25,7 @@ const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-
 import './App.css'
 import { useEffect, useState,useRef } from 'react'
 const animatedRobotSrc = `${red_eyed}?t=${Date.now()}`;
-const history = []
+
 function App() {
 
   const[scaleUp,setScaleUp] = useState({
@@ -40,11 +39,13 @@ function App() {
   const[roboAppear,setRoboappear] = useState(false) //angry robo image
   const [messages, setMessages] = useState([]);
   const[textData,setTextData] = useState("")
-  const[triggerTextBox, setTriggerTextBox] = useState(false)
+  const[triggerTextBox, setTriggerTextBox] = useState(true)
   const[switchText, setSwitchText] = useState([])
+  const[closeTab,setCloseTab] = useState(true)
   const today = new Date().toISOString().split("T")[0];
   //const[aiTraining,setAiTraining] = useState( ``);
 const [chatHistory, setChatHistory] = useState([]);
+const [isMinimized, setIsMinimized] = useState(false);
 //const [userInput, setUserInput] = useState('');
 
   const messagesEndRef = useRef(null);
@@ -96,7 +97,7 @@ useEffect(()=>{
 
     const timer_3 = setTimeout(()=>{
       setRoboappear(false)  // this make the robo image apearence switching
-      setTriggerTextBox(true) // used to appear input text box
+      //setTriggerTextBox(true) // used to appear input text box
     },4000)
     
 
@@ -175,6 +176,15 @@ useEffect(()=>{
   },3000)
   return ()=> clearTimeout(initialTimer)  
 
+  }
+
+
+  const minimizeChat = ()=>{
+    setTriggerTextBox((prev)=>!prev)
+  }
+
+  const closeChat = ()=>{
+    setCloseTab(false)
 
   }
 
@@ -292,19 +302,21 @@ console.log(messages.text);
 
   return (
     <>
-    <div className='relative w-full h-[100dvh]  flex justify-center items-center'>
-        <div className='relative lg:w-1/4 md:1/4 w-[90%] lg:h-6/7 md:h-6/7 h-5/6  bg-white rounded-lg flex justify-center items-center'>
+    { closeTab &&
+    (<div className='relative w-full h-[100dvh]  flex justify-center items-center'>
+      <div className='w-full h-full  flex justify-center items-center'>
+        <div className={`relative lg:w-1/4 md:1/4 w-[90%]  bg-white rounded-lg flex justify-center items-center  transition-all duration-500 ease-in-out ${triggerTextBox ? "lg:h-6/7 md:h-6/7 h-5/6":"h-10"}`}>
           <div className='absolute top-0 left-0 w-full h-12 flex flex-row z-10 bg-red-700 shadow-lg shadow-black'> 
             <div className='w-8 h-8 ml-[68%] mt-1.5 text-stone-300 transition-transform duration-300 hover:scale-110 hover:text-stone-700 shadow-md shadow-black rounded-full flex justify-center items-center' onClick={clearChat}>{clearIcon}</div>
-            <div className='w-8 h-8 ml-1 mt-1 text-stone-300 transition-transform duration-300 hover:scale-110 hover:text-stone-700 shadow-md shadow-black rounded-full flex justify-center items-center'>{minimize}</div>   
-              <div className='w-8 h-8 ml-1 mt-1 text-stone-300 transition-transform duration-300 hover:scale-110 hover:text-stone-700 shadow-md shadow-black rounded-full flex justify-center items-center'>{close}</div>
+            <div className={`w-8 h-8 ml-1 mt-1 text-stone-300 transition-transform duration-700 hover:scale-110 hover:text-stone-700 shadow-md shadow-black rounded-full flex justify-center items-center ${triggerTextBox ? "rotate-0" : "rotate-180"}`}  onClick={minimizeChat}>{minimize}</div>   
+              <div className='w-8 h-8 ml-1 mt-1 text-stone-300 transition-transform duration-300 hover:scale-110 hover:text-stone-700 shadow-md shadow-black rounded-full flex justify-center items-center' onClick={closeChat}>{close}</div>
   
                 </div>  
                 <div className='absolute'>
                 <img 
                   src={animatedRobotSrc} 
                   alt="robot" 
-                  className={`w-24 h-auto  transition-all duration-800 ease-in-out ${scaleUp.scaling ? "scale-100" : "scale-200"} ${roboAppear ? "opacity-100":"opacity-0"}`}
+                  className={` ${triggerTextBox ? "w-24":"w-0"}  h-auto  transition-all duration-800 ease-in-out ${scaleUp.scaling ? "scale-100" : "scale-200"} ${roboAppear ? "opacity-100":"opacity-0"}`}
                    />
                  
               
@@ -334,7 +346,7 @@ console.log(messages.text);
                   </div>
                   
      
-              <div className='fixed'   >
+              <div className='fixed'>
              
                { triggerTextBox && (<div className='relative w-full h-8 '>
                 <textarea 
@@ -363,13 +375,14 @@ console.log(messages.text);
               
             </div> 
 
-            <div className={`absolute left-20 top-86 text-red-600 text-3xl text-center ${roboAppear ? "opacity-100":"opacity-0"}`}>𝓐𝓷𝓰𝓻𝔂 𝓡𝓸𝓫𝓸</div>
+            <div className={`absolute left-22 text-red-600 text-3xl text-center ${roboAppear ? "opacity-100":"opacity-0"}  ${triggerTextBox ? "top-20":"top-0"}`}>𝓐𝓷𝓰𝓻𝔂 𝓡𝓸𝓫𝓸</div>
 
     </div>
+    </div>
     
-</div>
+</div>)
 
-
+                      }
 
     </>
   )
