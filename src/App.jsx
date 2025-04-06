@@ -205,7 +205,7 @@ useEffect(()=>{
 
     const newModelMessage = {
       role: 'model',
-      parts: [{ text: replyText }],
+      parts: [{ text: aiResponse }],//
     };
     setChatHistory((prev) => [...prev, newModelMessage]);
       
@@ -292,14 +292,14 @@ console.log(messages.text);
 
   return (
     <>
-    <div className='relative w-full h-[100vh]  flex justify-center items-center'>
-        <div className='relative lg:w-1/4 md:1/4 w-[90%] h-96 border border-stone-500 bg-white rounded-lg flex justify-center items-center'>
-   <div className='absolute top-0 left-[70%] flex flex-row z-10'> 
- <div className='ml-1 mt-1.5 text-stone-600 transition-transform duration-300 hover:scale-110 hover:text-red-700' onClick={clearChat}>{clearIcon}</div>
-   <div className='ml-1 mt-1 text-stone-600 transition-transform duration-300 hover:scale-110 hover:text-red-700 '>{minimize}</div>   
-   <div className='ml-1 mt-1 text-stone-600 transition-transform duration-300 hover:scale-110 hover:text-red-700'>{close}</div>
+    <div className='relative w-full h-[100dvh]  flex justify-center items-center'>
+        <div className='relative lg:w-1/4 md:1/4 w-[90%] lg:h-2/3 md:h-2/3 h-2/3 border border-green-500 bg-white rounded-lg flex justify-center'>
+          <div className='absolute top-0 left-[70%] flex flex-row z-10 bg-red-500'> 
+            <div className='ml-1 mt-1.5 text-stone-700 transition-transform duration-300 hover:scale-110 hover:text-red-700' onClick={clearChat}>{clearIcon}</div>
+            <div className='ml-1 mt-1 text-stone-700 transition-transform duration-300 hover:scale-110 hover:text-red-700 '>{minimize}</div>   
+              <div className='ml-1 mt-1 text-stone-700 transition-transform duration-300 hover:scale-110 hover:text-red-700'>{close}</div>
   
-</div>  
+                </div>  
                 <img 
                   src={animatedRobotSrc} 
                   alt="robot" 
@@ -309,14 +309,10 @@ console.log(messages.text);
 
 
 
-            <div className={`absolute w-full h-80`} style={{left: `${scaleUp.positionX+20}px`, top: `${scaleUp.positionY-80}px`}}>
 
-          
-            </div>
+            <div className='relative w-full h-5/6 border border-yellow-500'>
 
-            <div className='relative w-full h-96'>
-
-                <div className="w-full h-80 relative flex flex-col items-start gap-2 p-4  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 ">
+                <div className="w-full h-full relative flex flex-col items-start gap-2 p-4  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 ">
             
                   {messages.map((msg) => (
                     <div key={msg.id} className='flex flex-row'><div>{switchText[msg.id] ? roboPic : userPic}</div>
@@ -337,9 +333,9 @@ console.log(messages.text);
      
               <div className='fixed'   >
              
-               { triggerTextBox && (<div className='relative w-full h-14'>
+               { triggerTextBox && (<div className='relative w-full h-8 mt-2'>
                 <textarea 
-                    className="w-[90%] h-10 ml-2 mt-2 bg-stone-800 resize-none text-white p-2 leading-normal overflow-hidden whitespace-pre-wrap break-words"
+                    className="w-full h-10 ml-4 mt-1 bg-stone-200 border border-stone-800 rounded-full resize-none text-stone-800 p-2 leading-normal overflow-hidden whitespace-pre-wrap break-words"
                     placeholder="Spill here..." value={textData} onChange={(e)=>setTextData(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
@@ -350,7 +346,7 @@ console.log(messages.text);
                       }
                     }}
                   ></textarea>
-                  <div className='absolute top-4 left-58' onClick={() => {
+                  <div className='absolute top-4 left-62' onClick={() => {
                           if (textData.trim() !== "") {
                             userMessage(textData);
                           }
@@ -362,7 +358,7 @@ console.log(messages.text);
                   </div>
 
               
-<div className={`absolute top-60 left-22 text-red-600 text-3xl text-center ${roboAppear ? "opacity-100":"opacity-0"}`}>𝓐𝓷𝓰𝓻𝔂 𝓡𝓸𝓫𝓸</div>
+                  <div className={`absolute top-60 left-22 text-red-600 text-3xl text-center ${roboAppear ? "opacity-100":"opacity-0"}`}>𝓐𝓷𝓰𝓻𝔂 𝓡𝓸𝓫𝓸</div>
             </div> 
 
 
