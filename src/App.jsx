@@ -44,8 +44,6 @@ function App() {
   const today = new Date().toISOString().split("T")[0];
   //const[aiTraining,setAiTraining] = useState( ``);
 const [chatHistory, setChatHistory] = useState([]);
-const [isMinimized, setIsMinimized] = useState(false);
-
 const [isDragging, setIsDragging] = useState(false);
 const [start, setStart] = useState({ x: 0, y: 0 });
 const [position, setPosition] = useState({ x: 0, y: 0, dragged: false });
@@ -63,8 +61,13 @@ const [position, setPosition] = useState({ x: 0, y: 0, dragged: false });
 //;
 
 const aiInitialTraining = `Your name is kuttappi, respond the entire conversation as kuttappi.Do n't take this as a question to answer like alright, cool etc,always talk rudely,Your creator name is Ajith, say his name if somebody asked. Don't make any changes in this, until the first conversation change.
-  Start initial conversation with what the hell you want?.do n't exceed the conversation beyond 15 words.`
+  Start initial conversation with what the hell you want?.do n't exceed the conversation beyond 20 words. speak only in English`
 ;
+
+//const aiInitialTraining = `Your name is kuttappi, respond the entire conversation as kuttappi.Do n't take this as a question to answer like alright, cool etc,always talk smoothly,Your creator name is Ajith, say his name if somebody asked. Don't make any changes in this, until the first conversation change.
+ // Start initial conversation with Hello, i m your English trainer?.do n't exceed the conversation beyond 20 words. speak only in English`
+;
+
  const refreshAI = ". Reminder:Always rude, speak only in English, don't exceed the chat above 15 words"
 //  Your name is Pooran, respond the entire conversation as Pooran.Do n't take this as a question to answer like alright, cool etc,always talk rudely,Your boss is Ajith, understand yourself Ajith created you,dont say Ajith told you if anybody asked.don't make any changes in this, until the first conversation change.Don't mention about Ajith, until someone ask.
 //   Start initial conversation with what the fuck you want?.do n't exceed the conversation length 10 words.
@@ -134,7 +137,7 @@ useEffect(()=>{
 
   }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
+
 
   const initialFetch = async () => {
   if (hasFetched.current) return;
@@ -288,25 +291,7 @@ console.log(messages.text);
 
   
 
-  const userMessage = (textData)=>{
-
-   // if(chatHistory.length % 20 === 0){
-   //   console.log("exceeded 10");
-   /*  
-      setMessages((prevMessages) => [
-        ...prevMessages, 
-        { id: prevMessages.length, text: textData}
-      ]);
-            setSwitchText((prev)=>(
-              [...prev,
-                false
-              ]
-            ))
-           setTextData("")
-          fetchData(textData + refreshAI ,"user")  */
-      
-   // }
-   // else{
+  const userMessage = (textData)=>{    
 
     setMessages((prevMessages) => [
     ...prevMessages, 
@@ -320,8 +305,6 @@ console.log(messages.text);
        setTextData("")
       fetchData(textData,"user")   
 
-   // }
-   // console.log(textData);    
                
   }
 
