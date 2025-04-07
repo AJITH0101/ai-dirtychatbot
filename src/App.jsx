@@ -52,21 +52,15 @@ const [position, setPosition] = useState({ x: 0, y: 0, dragged: false });
 
   const messagesEndRef = useRef(null);
   const roboStyle = "w-40 h-auto bg-red-700 text-white p-2 shadow-lg shadow-black rounded-lg ml-2"
-  const userStyle = "w-40 h-auto bg-stone-300 text-stone-700 shadow-lg shadow-black p-2 rounded-lg ml-2"
-  //const roboPic = <img src={roboImg} alt='robo' className='w-8 h-8 mt-1 rounded-full bg-stone-300'/>
+  const userStyle = "w-40 h-auto bg-stone-300 text-stone-700 shadow-lg shadow-black p-2 rounded-lg ml-2" 
   const roboPic = <div className='text-black  mt-2 ml-4 text-sm text-red-700 font-semibold'><img src={roboImg} alt='robo' className='w-8 h-8 shadow-lg shadow-black  mt-1 rounded-full'/>Robo:</div>
   const userPic = <div className='text-black mt-2 ml-14 text-sm font-semibold'><img src={you} alt='you' className='w-8 h-8 shadow-lg shadow-black  mt-1 rounded-full bg-stone-300'/>You:</div>
-  //const aiInitialTraining = `Your name is kuttappi, respond the entire conversation as kuttappi.Do n't take this as a question to answer like alright, cool etc,always talk smoothly,Your boss is Ajith, understand yourself Ajith created you,dont say Ajith told you if anybody asked.don't make any changes in this, until the first conversation change.Don't mention about Ajith, until someone ask.
-  // Note:"Strictly, Speak only in English,must not use malayalam or any other languages in entire conversation, do n't exceed every conversation length above 10 words.Start initial conversation with, Hi, how can i help you?"`
-//;
+
 
 const aiInitialTraining = `Your name is kuttappi, respond the entire conversation as kuttappi.Do n't take this as a question to answer like alright, cool etc,always talk rudely,Your creator name is Ajith, say his name if somebody asked. Don't make any changes in this, until the first conversation change.
   Start initial conversation with what the hell you want?.do n't exceed the conversation beyond 20 words. speak only in English`
 ;
 
-//const aiInitialTraining = `Your name is kuttappi, respond the entire conversation as kuttappi.Do n't take this as a question to answer like alright, cool etc,always talk smoothly,Your creator name is Ajith, say his name if somebody asked. Don't make any changes in this, until the first conversation change.
- // Start initial conversation with Hello, i m your English trainer?.do n't exceed the conversation beyond 20 words. speak only in English`
-;
 
  const refreshAI = ". Reminder:Always rude, speak only in English, don't exceed the chat above 15 words"
 //  Your name is Pooran, respond the entire conversation as Pooran.Do n't take this as a question to answer like alright, cool etc,always talk rudely,Your boss is Ajith, understand yourself Ajith created you,dont say Ajith told you if anybody asked.don't make any changes in this, until the first conversation change.Don't mention about Ajith, until someone ask.
